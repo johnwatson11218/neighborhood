@@ -1,0 +1,44 @@
+<html>
+
+	<head>
+		<title>Project 5</title>
+		<script type='text/javascript' src='js/jquery-2.1.3.min.js'></script>
+	</head>
+	<body>
+		<!--
+			my google maps api key is AIzaSyBr9puVePcpzhyLxLfEph5-AXkvFtbxWe8
+
+			src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBr9puVePcpzhyLxLfEph5-AXkvFtbxWe8&q=Phoenix,AZ">
+		-->
+
+		<script>
+			$(document).ready(function(){ /* no op */});
+
+			function runSearch(){
+				var street = $('#street').val();
+				var city = $('#city').val();
+				var state = $('#state').val();
+
+				var q = "https://maps.googleapis.com/maps/api/streetview?size=1200x800&location=" + street + " " + city + ", " + state
+				
+
+
+				//$('body').css('background-image', 'url("' + q + '")');
+				// either or .. both work but below tends to accumulate images
+				$('body').append( '<img  src="' + q + '">');
+
+			}
+		</script
+
+		<form>
+			Street: <input id="street" name="street" />
+			<br />
+			City: <input id="city" name="city" />
+			<br />
+			State: <input id="state" name="state" />
+			<br />
+			<input type="submit" onclick="runSearch();"/>
+		</form>
+
+	</body>
+</html>
