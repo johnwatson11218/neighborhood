@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <style type="text/css">
       html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
     </style>
@@ -10,8 +11,8 @@
     <script type="text/javascript">
       function initialize() {
 
-
-        var myLatlng = new google.maps.LatLng(34.544377, -112.470122);
+        // 33.486305, -112.029339
+        var myLatlng = new google.maps.LatLng(33.486305, -112.029339);
         var mapOptions = {
           center: myLatlng,
           zoom: 12
@@ -39,7 +40,7 @@
       google.maps.event.addListener(marker, 'click', f);
 
 
-        var myLatlng2 = new google.maps.LatLng( 34.544377 + .1, -112.470122 + .1 );
+        var myLatlng2 = new google.maps.LatLng( 33.486305 + .1, -112.029339 + .1 );
         var marker2 = new google.maps.Marker( { position : myLatlng2, map : map, 
           title : "what the f?", animation : google.maps.Animation.BOUNCE});
 
