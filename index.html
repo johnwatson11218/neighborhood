@@ -23,18 +23,18 @@
 	            title:"Biltmore", 
 	            animation: google.maps.Animation.DROP	            
         	}); 
-		google.maps.event.addListener( a , 'click', function (){
-			infowindow.open( map, a );
-		});
+		// google.maps.event.addListener( a , 'click', function (){
+		// 	infowindow.open( map, a );
+		// });
 		
 		var b = new google.maps.Marker( { 
 	        	position : new google.maps.LatLng(33.439610, -112.011336), 
 	        	map : map, 
 	          	title : "Sky Harbor International Airport"
       		}); 
-		google.maps.event.addListener( b , 'click', function (){
-			infowindow.open( map, b );
-		});
+		// google.maps.event.addListener( b , 'click', function (){
+		// 	infowindow.open( map, b );
+		// });
 
 
 		
@@ -43,35 +43,51 @@
 	        	map : map, 
 	          	title : "Metro Center Mall"
       		});
-		google.maps.event.addListener( c , 'click', function (){
-			infowindow.open( map, c );
-		});
+		// google.maps.event.addListener( c , 'click', function (){
+		// 	infowindow.open( map, c );
+		// });
 
       	
       	// 
       	// start of the knockout init code
       	//
+
+
+      	// the next task is to give each marker its own info bubble and to make it so that when one is clicked all the others hide. 
+      	// i want it to be a property of the Decorated Marker object 
+
+      	// test case : use list view to open a bubble and make sure that clicking marker "toggles" it correctly. 
+
+      	/*
  var infowindow = new google.maps.InfoWindow({
       content: "this is the same text for all ... "
   });
+  	*/
 
 
 
-      	function DecoratedMarker( info , m ){
+      	function DecoratedMarker( info , ma , bText ){
       		var self = this;
       		self.info = info;
-      		self.m = m;
+      		self.bubbleText = bText;
+      		self.infowindow = new google.maps.InfoWindow({ content : bText })
+      		self.m = ko.observable( ma );
+      		console.log( self.m );
+      		console.log( self.m() );
+      		//self.m().addEventListener( "click", function(){ alert( 'boo' ) } , false );
+      		google.maps.event.addListener( self.m() , 'click',  function(){  self.infowindow.open( map, self.m() );  } ); 
+
       		self.selected = function(){      			
-      			infowindow.open(map,m);
+      			self.infowindow.open(map,self.m());
       		}
       	}
 
       	function MarkerViewModel(){
       		var self = this;
       		self.markers = ko.observableArray( [
-      				new DecoratedMarker( "the biltmore ..." , a ),
-      				new DecoratedMarker( "the airport ...." , b ),
-      				new DecoratedMarker( "the mall " , c ),
+      				new DecoratedMarker( "the biltmore ..." , a , 'biltmore bubble'),
+      				new DecoratedMarker( "the airport ...." , b , 'airport bubble'),
+      				new DecoratedMarker( "the mall " , c , 'mall bubble '),
       			]);
 
       		self.selectItem = function( item ){
