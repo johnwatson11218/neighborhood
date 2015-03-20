@@ -10,100 +10,76 @@
 
 	<script type="text/javascript">
 
-      function f(m){ console.log(  m)}
-
       $( document ).ready(  function(){
 
       	var map = new google.maps.Map(document.getElementById('map-canvas'), {center: new google.maps.LatLng(33.486305, -112.049339),zoom: 12 });
-
-        var markers = [];
-		var a = new google.maps.Marker({
-	            position: new google.maps.LatLng(33.509853, -112.027171),
-	            map: map,
-	            title:"Biltmore", 
-	            animation: google.maps.Animation.DROP	            
-        	}); 
-		// google.maps.event.addListener( a , 'click', function (){
-		// 	infowindow.open( map, a );
-		// });
-		
-		var b = new google.maps.Marker( { 
-	        	position : new google.maps.LatLng(33.439610, -112.011336), 
-	        	map : map, 
-	          	title : "Sky Harbor International Airport"
-      		}); 
-		// google.maps.event.addListener( b , 'click', function (){
-		// 	infowindow.open( map, b );
-		// });
-
-
-		
-      	var c = new google.maps.Marker( { 
-	        	position : new google.maps.LatLng(33.578376, -112.121843), 
-	        	map : map, 
-	          	title : "Metro Center Mall"
-      		});
-		// google.maps.event.addListener( c , 'click', function (){
-		// 	infowindow.open( map, c );
-		// });
-
+      
+      	
+		var markerInfo = [
+			{   listText : "the biltmore", 
+				latLng : new google.maps.LatLng(33.509853, -112.027171), 
+				title : "Biltmore", 
+				infoText : 'biltmore bubble' }, 
+			{   listText :  "the airport" , 
+				latLng : new google.maps.LatLng(33.439610, -112.011336), 
+				title : "Sky Harbor International Airport", 
+				infoText : 'airport bubble'},
+			{   listText :  "the mall " , 
+				latLng : new google.maps.LatLng(33.578376, -112.121843), 
+				title : "Metro Center Mall", 
+				infoText : 'mall bubble ' }
+		]
       	
       	// 
       	// start of the knockout init code
       	//
-      	function DecoratedMarker( info , ma , bText , mvm){
+      	function DecoratedMarker( marker_info, mvm){
       		var self = this;
-      		self.info = info;
-      		self.bubbleText = bText;
+
+      		// this is the text displayed in the list view
+      		self.info = marker_info["listText"];
       		self.mvm = mvm;
-      		self.infowindow = new google.maps.InfoWindow({ content : bText })
-      		self.m = ko.observable( ma );
-      		/*
-      			This function is called when one of the markers on the map is clicked
-      		*/
-      		google.maps.event.addListener( self.m() , 'click',  function(){  
-      			window.mvm.closeAll();
-      			self.infowindow.open( map, self.m() );  
+
+      		self.infowindow = new google.maps.InfoWindow( { content : marker_info["infoText"] })
+      		self.mapMarker = new google.maps.Marker({
+	            position: marker_info["latLng"],
+	            map: map,
+	            title: marker_info["title"], 	                       
+        	}); 
+
+      		// This function is called when one of the markers on the map is clicked
+      		google.maps.event.addListener( self.mapMarker , 'click',  function(){  
+      			mvm.closeAll();
+      			self.infowindow.open( map, self.mapMarker );  
       		}); 
 
-      		/*
-      			This function is called when one of the list items is clicked from list view
-      		*/
+      		// This function is called when one of the list items is clicked from list view
       		self.selected = function(){     
       			mvm.closeAll();
-      			self.infowindow.open(map,self.m());
+      			self.infowindow.open( map,self.mapMarker );
       		}
       	}
 
       	function MarkerViewModel(){
       		var self = this;
-      		self.markers = ko.observableArray( [
-      				new DecoratedMarker( "the biltmore ..." , a , 'biltmore bubble', self),
-      				new DecoratedMarker( "the airport ...." , b , 'airport bubble', self),
-      				new DecoratedMarker( "the mall " , c , 'mall bubble ', self),
-      			]);
+
+      		var tmpArray = []
+      		for( var i = 0; i < markerInfo.length; i++ ) tmpArray.push( new DecoratedMarker( markerInfo[i], self) );      
+      		self.markers = ko.observableArray( tmpArray );
 
       		self.selectItem = function( item ){
       			item.selected();
       		}
 
       		self.closeAll = function( ){
-      			for( var i = 0; i < self.markers().length; i++ ){
-      				var m = self.markers()[i];
-      				m.infowindow.close();
-      			}
+      			for( var i = 0; i < self.markers().length; i++ ) self.markers()[i].infowindow.close();
       		}
       	}
-
-      	/*
-      		Construct and store a ref to the MarkerViewModel, it is stored in the window object for global access. 
-      		If I can find a better way to integrate google map markers with knockout this may not be needed
-      	*/
-      	var mvm = new MarkerViewModel();
-      	window.mvm = mvm;
-        ko.applyBindings( mvm );
+      	
+        ko.applyBindings( new MarkerViewModel() );
 
       });
+
     </script>
 </head>
 <body>
@@ -127,7 +103,7 @@
 	<div id="list-view">
 		<table>
 			<tbody data-bind="foreach: markers()">
-				<tr data-bind="click: $root.selectItem"><td data-bind="text: info"> .... </td></tr>
+				<tr data-bind="click: $root.selectItem"><td data-bind="text: info"></td></tr>
 			</tbody>
 		</table>
 	</div>
