@@ -19,44 +19,77 @@
 			{   listText : "the biltmore", 
 				latLng : new google.maps.LatLng(33.509853, -112.027171), 
 				title : "Biltmore", 
-				infoText : 'biltmore bubble' }, 
+				infoText : 'biltmore bubble', 
+				venueId : "4e8a0dc45c5c370ff4894f15"
+			}, 
 			{   listText :  "the airport" , 
 				latLng : new google.maps.LatLng(33.439610, -112.011336), 
 				title : "Sky Harbor International Airport", 
-				infoText : 'airport bubble'},
+				infoText : 'airport bubble', 
+				venueId : "4e8a0dc45c5c370ff4894f15"
+			},
 			{   listText :  "the mall " , 
 				latLng : new google.maps.LatLng(33.578376, -112.121843), 
 				title : "Metro Center Mall", 
-				infoText : 'mall bubble ' }
+				infoText : 'mall bubble ', 
+				venueId : "4e8a0dc45c5c370ff4894f15"
+			},
+			{
+				listText : "Green Restaurant",
+				latLng : new google.maps.LatLng( 33.47016494688462,  -112.06533268014412 ),
+				title : "Green Restaurant", 
+				infoText : 'green bubble', 
+				venueId : "4e8a0dc45c5c370ff4894f15"
+			}
 		]
       	
+
+		var clientId = "BQGC5WNEA0R1OCNX5OS5K3Q0WLGQ5OSJQAICSYNCHQ5TULJN";
+		var clientSecret = "HUOXP5ZINAHDEH2EHGZLM0ZH0E0XSZN3CYQMMBIP0MAVYXRP";
+
+
       	// 
       	// start of the knockout init code
       	//
-      	function DecoratedMarker( marker_info, mvm){
+      	function DecoratedMarker( marker_info, mvm ){
       		var self = this;
 
       		// this is the text displayed in the list view
       		self.info = marker_info["listText"];
       		self.mvm = mvm;
+      		self.venueId = marker_info['venueId'];
 
-      		self.infowindow = new google.maps.InfoWindow( { content : marker_info["infoText"] })
-      		self.mapMarker = new google.maps.Marker({
-	            position: marker_info["latLng"],
-	            map: map,
-	            title: marker_info["title"], 	                       
-        	}); 
+      		self.bubbleText  = ko.observable( marker_info["infoText"])
+      		//self.infowindow = new google.maps.InfoWindow( { content : marker_info["infoText"] })
+      		self.infowindow = new google.maps.InfoWindow( { content : self.bubbleText() })
+
+      		self.mapMarker = new google.maps.Marker({ position: marker_info["latLng"],map: map,title: marker_info["title"] }); 
+
 
       		// This function is called when one of the markers on the map is clicked
       		google.maps.event.addListener( self.mapMarker , 'click',  function(){  
-      			mvm.closeAll();
-      			self.infowindow.open( map, self.mapMarker );  
+      			self.selected();
       		}); 
 
       		// This function is called when one of the list items is clicked from list view
       		self.selected = function(){     
       			mvm.closeAll();
+      			self.bubbleText('after the click')
       			self.infowindow.open( map,self.mapMarker );
+
+      			$('#four-square-view').css( 'display', 'block');	
+    
+				var foursquareUrl = 'https://api.foursquare.com/v2/venues/' + self.venueId + '?v=20130815&' + 'client_id=' + clientId + '&client_secret=' + clientSecret;
+			 
+				 $.ajax( { url : foursquareUrl }).done( 			 	
+						function ( response) { 
+							var v = response.response.venue;
+							mvm.fourName( v['name'])
+			      			mvm.fourRating( v['rating'])
+							//console.log( v['location'])
+					});
+
+
       		}
       	}
 
@@ -74,6 +107,9 @@
       		self.closeAll = function( ){
       			for( var i = 0; i < self.markers().length; i++ ) self.markers()[i].infowindow.close();
       		}
+
+      		self.fourName = ko.observable('inital');
+      		self.fourRating = ko.observable( 'initial');
       	}
       	
         ko.applyBindings( new MarkerViewModel() );
@@ -106,6 +142,10 @@
 				<tr data-bind="click: $root.selectItem"><td data-bind="text: info"></td></tr>
 			</tbody>
 		</table>
+	</div>
+
+	<div id="four-square-view">
+		FourSquare.com says ... <strong data-bind="text: fourName"></strong> is rated at <strong data-bind="text: fourRating"></strong></strong>
 	</div>
 
 

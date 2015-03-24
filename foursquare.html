@@ -1,21 +1,36 @@
+<html>
+	<head>
+		<title>Project 5</title>
+		<script type='text/javascript' src='js/jquery-2.1.3.min.js'></script>
+	</head>
+	<body>
+		<script>
+			/*
 
+			  		Client ID
+					BQGC5WNEA0R1OCNX5OS5K3Q0WLGQ5OSJQAICSYNCHQ5TULJN
 
-https://api.foursquare.com/v2/venues/search
-  ?client_id=BQGC5WNEA0R1OCNX5OS5K3Q0WLGQ5OSJQAICSYNCHQ5TULJN
-  &client_secret=CHUOXP5ZINAHDEH2EHGZLM0ZH0E0XSZN3CYQMMBIP0MAVYXRP
-  &v=20130815
-  &ll=40.7,-74
-  &query=sushi
+					Client Secret
+					HUOXP5ZINAHDEH2EHGZLM0ZH0E0XSZN3CYQMMBIP0MAVYXRP
 
+	*/
 
+			var clientId = "BQGC5WNEA0R1OCNX5OS5K3Q0WLGQ5OSJQAICSYNCHQ5TULJN";
+			var clientSecret = "HUOXP5ZINAHDEH2EHGZLM0ZH0E0XSZN3CYQMMBIP0MAVYXRP";
+			var venueId = "4e8a0dc45c5c370ff4894f15"
+			var foursquareUrl = 'https://api.foursquare.com/v2/venues/' + venueId + '?v=20130815&' + 'client_id=' + clientId + '&client_secret=' + clientSecret;
+			 
+			 console.log( 'a')
+			 $.ajax( { url : foursquareUrl }).done( 			 	
+					function ( response) { 
+						var v = response.response.venue;
+						console.log( v['name'])
+						console.log( v['rating'])
+						console.log( v['location'])
+					});
+						
+			
+		</script
 
-  Client ID
-BQGC5WNEA0R1OCNX5OS5K3Q0WLGQ5OSJQAICSYNCHQ5TULJN
-
-Client Secret
-HUOXP5ZINAHDEH2EHGZLM0ZH0E0XSZN3CYQMMBIP0MAVYXRP
-
-
-
-
-https://api.foursquare.com/v2/venues/search?client_id=BQGC5WNEA0R1OCNX5OS5K3Q0WLGQ5OSJQAICSYNCHQ5TULJN&client_secret=HUOXP5ZINAHDEH2EHGZLM0ZH0E0XSZN3CYQMMBIP0MAVYXRP&v=20130815&ll=40.7,-74&query=sushi
+	</body>
+</html>
