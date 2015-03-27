@@ -65,11 +65,11 @@
 
       		// this is the text displayed in the list view
       		self.info = marker_info["listText"];
+      		self.showIt = ko.observable( true )
       		self.mvm = mvm;
       		self.venueId = marker_info['venueId'];
 
       		self.bubbleText  = ko.observable( marker_info["infoText"])
-      		//self.infowindow = new google.maps.InfoWindow( { content : marker_info["infoText"] })
       		self.infowindow = new google.maps.InfoWindow( { content : self.bubbleText() })
 
       		self.mapMarker = new google.maps.Marker({ position: marker_info["latLng"],map: map,title: marker_info["title"] }); 
@@ -85,7 +85,10 @@
       			mvm.closeAll();
       			self.bubbleText('after the click')
       			self.infowindow.open( map,self.mapMarker );
-
+      			// this line of code will hide the marker, use it in the search
+      			//self.mapMarker.setVisible( !self.mapMarker.getVisible())
+      			// likewise this one can be used to show/hide the entry in the list view
+      			//self.showIt( !self.showIt() )
       			$('#four-square-view').css( 'display', 'block');	
     
 				var foursquareUrl = 'https://api.foursquare.com/v2/venues/' + self.venueId + '?v=20130815&' + 'client_id=' + clientId + '&client_secret=' + clientSecret;
@@ -148,7 +151,7 @@
 	<div id="list-view">
 		<table>
 			<tbody data-bind="foreach: markers()">
-				<tr data-bind="click: $root.selectItem"><td data-bind="text: info"></td></tr>
+				<tr data-bind="click: $root.selectItem, visible : showIt"><td data-bind="text: info"></td></tr>
 			</tbody>
 		</table>
 	</div>
