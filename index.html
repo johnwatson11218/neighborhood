@@ -20,34 +20,39 @@
 				latLng : new google.maps.LatLng(33.5105393352139 , -112.028618823315 	), 
 				title : "Apple Store", 
 				infoText : 'the apple store bubble', 
-				venueId : "4a3d9447f964a52077a21fe3"
+				venueId : "4a3d9447f964a52077a21fe3",
+				keys : [ 'computer', 'apple', 'biltmore']
 			}, 
 			{   listText :  "Los Reyes de la Torta" , 
 				latLng : new google.maps.LatLng(33.57084159984521, -112.06561795215607), 
 				title : "Los Reyes de la Torta", 
 				infoText : 'Los Reyes de la Torta bubble', 
-				venueId : "4b61dfacf964a52069282ae3"
+				venueId : "4b61dfacf964a52069282ae3", 
+				keys : [ 'mexican', 'food']
 			},
 			{
 				listText : "Green Restaurant",
 				latLng : new google.maps.LatLng( 33.47016494688462,  -112.06533268014412 ),
 				title : "Green Restaurant", 
 				infoText : 'green bubble', 
-				venueId : "4e8a0dc45c5c370ff4894f15"
+				venueId : "4e8a0dc45c5c370ff4894f15",
+				keys : [ 'vegan', 'food']
 			},
 			{
 				listText : "Copper Star Coffee",
 				latLng : new google.maps.LatLng( 33.49749976025891, -112.08386364950333 ),
 				title : "Copper Star Coffee", 
 				infoText : 'Copper Star Bubble', 
-				venueId : "4a57f364f964a52021b71fe3"
+				venueId : "4a57f364f964a52021b71fe3", 
+				keys : [ 'coffee']
 			},
 			{
 				listText : "Olive Garden",
 				latLng : new google.maps.LatLng(  33.581339203011716,  -112.1181889383759),
 				title : "Olive Garden", 
 				infoText : 'Olive Garden Bubble', 
-				venueId : "4b4e8298f964a5200ff026e3"
+				venueId : "4b4e8298f964a5200ff026e3", 
+				keys : [ 'italian', 'food']
 			}
 		]
      
@@ -69,6 +74,8 @@
       		self.mvm = mvm;
       		self.venueId = marker_info['venueId'];
 
+      		self.keys = marker_info['keys']
+
       		self.bubbleText  = ko.observable( marker_info["infoText"])
       		self.infowindow = new google.maps.InfoWindow( { content : self.bubbleText() })
 
@@ -83,14 +90,9 @@
       		// This function is called when one of the list items is clicked from list view
       		self.selected = function(){     
       			mvm.closeAll();
-      			self.bubbleText('after the click')
       			self.infowindow.open( map,self.mapMarker );
-      			// this line of code will hide the marker, use it in the search
-      			//self.mapMarker.setVisible( !self.mapMarker.getVisible())
-      			// likewise this one can be used to show/hide the entry in the list view
-      			//self.showIt( !self.showIt() )
+
       			$('#four-square-view').css( 'display', 'block');	
-    
 				var foursquareUrl = 'https://api.foursquare.com/v2/venues/' + self.venueId + '?v=20130815&' + 'client_id=' + clientId + '&client_secret=' + clientSecret;
 			 
 				 $.ajax( { url : foursquareUrl }).done( 			 	
@@ -98,10 +100,27 @@
 							var v = response.response.venue;
 							mvm.fourName( v['name'])
 			      			mvm.fourRating( v['rating'])
-							//console.log( v['location'])
 					});
+      		}
 
+      		self.showBubble = function(){
+				self.infowindow.open( map,self.mapMarker );
+      		}
 
+      		self.matches = function( q ){
+      			// see if query 'q' appears in the keys
+      			return $.inArray( q, self.keys ) != -1
+      		}
+
+      		self.hide = function(){
+      			self.infowindow.close()
+      			self.mapMarker.setVisible( false );
+      			self.showIt( false );
+      		}
+
+      		self.show = function() {
+      			self.mapMarker.setVisible( true );
+      			self.showIt( true );
       		}
       	}
 
@@ -116,12 +135,48 @@
       			item.selected();
       		}
 
+
       		self.closeAll = function( ){
       			for( var i = 0; i < self.markers().length; i++ ) self.markers()[i].infowindow.close();
       		}
 
       		self.fourName = ko.observable('inital');
       		self.fourRating = ko.observable( 'initial');
+
+      		self.searchQ = ko.observable( '' )
+      		self.searchMarkers = function(){
+      			self.hideAll();
+      			var q = self.searchQ()
+
+      			// find a list of markers that match this string
+      			var filterList = []
+      			for( var i = 0; i < self.markers().length; i++ ){
+      				var m = self.markers()[i];
+      				if( m.matches( q ))
+      					filterList.push( m );
+      			}
+
+      			for( var i = 0; i < filterList.length; i++ ) {
+      				filterList[i].show()
+      				filterList[i].showBubble()
+      			}
+
+      		}
+
+      		self.showAll = function(){ 
+      			for( var i = 0; i < self.markers().length; i++ ){
+					 self.markers()[i].show();  					 
+				}
+      		}
+
+
+      		self.hideAll = function(){ for( var i = 0; i < self.markers().length; i++ ) self.markers()[i].hide(); }
+
+      		self.clearSearch = function(){
+      			self.searchQ("")
+      			self.hideAll()
+      			self.showAll()
+      		}
       	}
       	
         ko.applyBindings( new MarkerViewModel() );
@@ -137,11 +192,13 @@
 			</tr>
 			<tr>
 				<td>
-			
-					<form action="">
-						<button type="button">Search</button>
-						<input id="query"/>
-					</form>
+						<button data-bind="click: searchMarkers">Search</button>						
+						<input data-bind="value: searchQ" />
+						<button data-bind="click: clearSearch">Clear</button>						
+					<!-- 
+					
+						
+					-->
 				</td>
 			</tr>
 		</table>	
