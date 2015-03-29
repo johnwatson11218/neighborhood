@@ -146,6 +146,10 @@
       			
       		}
 
+      		self.showForSearchResults = function(){
+      			self.show();
+      			self.showBubble();
+      		}
       		
       	}
 
@@ -185,8 +189,7 @@
       			}
 
       			for( var i = 0; i < filterList.length; i++ ) {
-      				filterList[i].show()
-      				filterList[i].showBubble()
+      				filterList[i].showForSearchResults();
       			}
 
       		}
@@ -198,7 +201,12 @@
       		}
 
 
-      		self.hideAll = function(){ for( var i = 0; i < self.markers().length; i++ ) self.markers()[i].hide(); }
+      		self.hideAll = function(){ 
+      			for( var i = 0; i < self.markers().length; i++ ){
+      				self.markers()[i].hide();	
+      				self.markers()[i].isSelected(false)
+      			}  
+      		}
 
       		self.clearSearch = function(){
       			self.searchQ("")
