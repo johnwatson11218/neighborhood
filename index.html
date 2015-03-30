@@ -19,14 +19,14 @@
 			{   
 				latLng : new google.maps.LatLng(33.5105393352139 , -112.028618823315 	), 
 				title : "Apple Store", 
-				infoText : 'The Apple Store sells macs and mac stuff.', 
+				infoText : 'The Apple Store sells macs and mac stuff', 
 				venueId : "4a3d9447f964a52077a21fe3",
 				keys : [ 'computer', 'apple', 'biltmore']
 			}, 
 			{   
 				latLng : new google.maps.LatLng(33.57084159984521, -112.06561795215607), 
 				title : "Los Reyes de la Torta", 
-				infoText : 'Mexico City style sandwich shop.', 
+				infoText : 'Mexico City style sandwich shop', 
 				venueId : "4b61dfacf964a52069282ae3", 
 				keys : [ 'mexican', 'food']
 			},
@@ -42,7 +42,7 @@
 				
 				latLng : new google.maps.LatLng( 33.49749976025891, -112.08386364950333 ),
 				title : "Copper Star Coffee", 
-				infoText : 'local coffee shop.', 
+				infoText : 'local coffee shop', 
 				venueId : "4a57f364f964a52021b71fe3", 
 				keys : [ 'coffee']
 			},
@@ -50,7 +50,7 @@
 				
 				latLng : new google.maps.LatLng(  33.581339203011716,  -112.1181889383759),
 				title : "Olive Garden", 
-				infoText : 'National Chain Restaurant.', 
+				infoText : 'National Chain Restaurant', 
 				venueId : "4b4e8298f964a5200ff026e3", 
 				keys : [ 'italian', 'food']
 			}
@@ -83,7 +83,7 @@
       		for( var i = 0 ; i < bubbleParts.length; i++ ) self.keys.push( bubbleParts[i] );
       		var titleParts = self.title.split( " " );
       		for( var i = 0; i < titleParts.length; i++ ) self.keys.push( titleParts[i]);
-
+      		
 
       		self.infowindow = new google.maps.InfoWindow( { content : self.bubbleText() })
 
@@ -212,13 +212,7 @@
 
       		self.clearSearch = function(){
       			self.searchQ("")
-      			for( var i = 0; i < self.markers().length; i++ ){
-      				// self.mapMarker.setVisible( true );
-					 self.markers()[i].mapMarker.setVisible( true );
-					 self.markers()[i].infowindow.close()
-					 self.markers()[i].isSelected( false );
-				}
-
+      			for( var i = 0; i < self.markers().length; i++ ) self.markers()[i].initialState();
       		}
       	}
       	
