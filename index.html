@@ -68,12 +68,11 @@
       	function DecoratedMarker( marker_info, mvm ){
       		var self = this;
 
-      		self.showIt = ko.observable( true )
+      		
       		self.mvm = mvm;
       		self.title = marker_info['title']
       		self.venueId = marker_info['venueId'];
-
-      		self.isSelected = ko.observable( false );
+      		
 
 			self.bubbleText  = ko.observable( marker_info["infoText"])
 
@@ -81,17 +80,9 @@
       		// take the bubbe text and the title and split them into words and add them to the list of keys
       		// so that the search will include that text as well
       		var bubbleParts = self.bubbleText().split( " ");
-      		for( var i = 0 ; i < bubbleParts.length; i++ ) self.keys.push( bubbleParts[i] )
-      			
-
-      		// to do
-      		//var titleParts = self.
-
-
-
-
-
-
+      		for( var i = 0 ; i < bubbleParts.length; i++ ) self.keys.push( bubbleParts[i] );
+      		var titleParts = self.title.split( " " );
+      		for( var i = 0; i < titleParts.length; i++ ) self.keys.push( titleParts[i]);
 
 
       		self.infowindow = new google.maps.InfoWindow( { content : self.bubbleText() })
@@ -105,52 +96,75 @@
       		}); 
 
       		// This function is called when one of the list items is clicked from list view
-      		self.selected = function(){     
+      		self.selected = function(){  
+      			// close any other bubble, and unselect any other label   
       			mvm.closeAll();
-      			self.isSelected( true )
-      			self.infowindow.open( map,self.mapMarker );
+      			self.clicked();      		
 
-      			$('#four-square-view').css( 'display', 'block');	
+      			$('#four-square-view').css( 'display', 'block');
+
 				var foursquareUrl = 'https://api.foursquare.com/v2/venues/' + self.venueId + '?v=20130815&' + 'client_id=' + clientId + '&client_secret=' + clientSecret;
-			 
+				mvm.fourName( 'waiting')
+      			mvm.fourRating( 'waiting')
 				 $.ajax( { url : foursquareUrl }).done( 			 	
 						function ( response) { 
 							var v = response.response.venue;
 							mvm.fourName( v['name'])
 			      			mvm.fourRating( v['rating'])
-					});
+					}).error( function () { 
+							mvm.fourName( 'error' ); 
+							mvm.fourRating( 'error');
+						}
+					);
       		}
 
-      		self.showBubble = function(){
-				self.infowindow.open( map,self.mapMarker );
-      		}
 
       		self.matches = function( q ){
       			// see if query 'q' appears in the keys
       			return $.inArray( q, self.keys ) != -1
       		}
 
-      		// this is called from the search function to hide markers that do not match the search results
-      		self.hide = function(){
-      			self.infowindow.close()
-      			self.mapMarker.setVisible( false );
-      			self.showIt( false );
+
+      		      
+      		/*
+				 The states are the following
+				1) initial map load. All labels are visible and unselected. All markers are visible and their baloon is up
+				2) marker clicked. Only that label will have 'selected' css class and the bubble is visible, also the 4square should be up.
+				3) matches a search, same as 2) above but w/o the 4square ( currently is coming off the list view which is odd )
+				4) does not match a search result, label and marker are not visible.
+      		*/
+
+      		// this var is used to control the css class for the list item
+      		self.isSelected = ko.observable( false );
+
+      		self.initialState = function(){
       			self.isSelected( false );
-      			
-      		}
-
-      		self.show = function() {
       			self.mapMarker.setVisible( true );
-      			self.showIt( true );
-      			self.isSelected( true );
-      			
+      			self.infowindow.close();
+      			$('#four-square-view').css( 'display', 'none');	
       		}
 
-      		self.showForSearchResults = function(){
-      			self.show();
-      			self.showBubble();
+      		self.clicked = function(){
+      			self.isSelected( true );
+      			self.mapMarker.setVisible( true );
+      			self.infowindow.open( map,self.mapMarker );
       		}
-      		
+
+      		self.matchesSearch = function(){
+      			self.isSelected( true );
+      			self.mapMarker.setVisible( true );
+      			self.infowindow.open( map,self.mapMarker );
+      			$('#four-square-view').css( 'display', 'none');	
+      		}
+
+      		self.doesNotMatch = function(){ 
+      			self.isSelected( false );
+      			self.mapMarker.setVisible( false );
+      			self.infowindow.close();
+      			$('#four-square-view').css( 'display', 'none');	
+      		}
+
+
       	}
 
       	function MarkerViewModel(){
@@ -160,58 +174,51 @@
       		for( var i = 0; i < markerInfo.length; i++ ) tmpArray.push( new DecoratedMarker( markerInfo[i], self) );      
       		self.markers = ko.observableArray( tmpArray );
 
+
+
+
+
+      		self.fourName = ko.observable('inital');
+      		self.fourRating = ko.observable( 'initial');
+      		self.searchQ = ko.observable( '' )
+
+
+      		self.closeAll = function( ){ for( var i = 0; i < self.markers().length; i++ ) self.markers()[i].initialState(); }
+      		self.searchMarkers = function(){
+
+      			var q = self.searchQ()
+
+      			// find a list of markers that match this string
+      			var filterList = []
+      			var noMatchList = []
+      			for( var i = 0; i < self.markers().length; i++ ){
+      				var m = self.markers()[i];
+      				if( m.matches( q ))
+      					filterList.push( m );
+      				else 
+      					noMatchList.push( m);
+      			}
+
+      			for( var i = 0; i < filterList.length; i++ )filterList[i].matchesSearch();
+      			for( var i = 0; i < noMatchList.length; i++ )noMatchList[i].doesNotMatch();
+
+
+      		}
+
       		self.selectItem = function( item ){
       			item.selected();
       		}
 
 
-      		self.closeAll = function( ){
-      			for( var i = 0; i < self.markers().length; i++ ){
-      				self.markers()[i].infowindow.close();
-      				self.markers()[i].isSelected( false );	
-      			} 
-      		}
-
-      		self.fourName = ko.observable('inital');
-      		self.fourRating = ko.observable( 'initial');
-
-      		self.searchQ = ko.observable( '' )
-      		self.searchMarkers = function(){
-      			self.hideAll();
-      			var q = self.searchQ()
-
-      			// find a list of markers that match this string
-      			var filterList = []
-      			for( var i = 0; i < self.markers().length; i++ ){
-      				var m = self.markers()[i];
-      				if( m.matches( q ))
-      					filterList.push( m );
-      			}
-
-      			for( var i = 0; i < filterList.length; i++ ) {
-      				filterList[i].showForSearchResults();
-      			}
-
-      		}
-
-      		self.showAll = function(){ 
-      			for( var i = 0; i < self.markers().length; i++ ){
-					 self.markers()[i].show();  					 
-				}
-      		}
-
-
-      		self.hideAll = function(){ 
-      			for( var i = 0; i < self.markers().length; i++ ){
-      				self.markers()[i].hide();	
-      				self.markers()[i].isSelected(false)
-      			}  
-      		}
-
       		self.clearSearch = function(){
       			self.searchQ("")
-      			self.hideAll()
-      			self.showAll()
+      			for( var i = 0; i < self.markers().length; i++ ){
+      				// self.mapMarker.setVisible( true );
+					 self.markers()[i].mapMarker.setVisible( true );
+					 self.markers()[i].infowindow.close()
+					 self.markers()[i].isSelected( false );
+				}
+
       		}
       	}
       	
@@ -228,8 +235,8 @@
 			</tr>
 			<tr>
 				<td>
-						<button data-bind="click: searchMarkers">Search</button>						
 						<input data-bind="value: searchQ" />
+						<button data-bind="click: searchMarkers">Search</button>												
 						<button data-bind="click: clearSearch">Clear</button>						
 				</td>
 			</tr>
@@ -241,7 +248,7 @@
 		<table>
 			<tbody data-bind="foreach: markers()">
 				<!-- <div data-bind="css: { profitWarning: currentProfit() < 0 }"> -->
-				<tr data-bind="click: $root.selectItem, visible : showIt"><td data-bind="text: title, css : { selected : isSelected() }"></td></tr>
+				<tr data-bind="click: $root.selectItem"><td data-bind="text: title, css : { selected : isSelected() }"></td></tr>
 			</tbody>
 		</table>
 	</div>
