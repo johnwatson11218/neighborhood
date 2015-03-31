@@ -53,7 +53,49 @@
 				infoText : 'National Chain Restaurant', 
 				venueId : "4b4e8298f964a5200ff026e3", 
 				keys : [ 'italian', 'food']
-			}
+			}, 
+			{
+				latLng : new google.maps.LatLng( 33.5004692924433, -112.07405313849449),
+				title : "Lux Coffee", 
+				infoText : 'local coffee shop', 
+				venueId : "414b7a80f964a520d01c1fe3", 
+				keys : [ 'coffee']
+
+			},  
+			{
+				latLng : new google.maps.LatLng( 33.5545746784533, -112.10102140903473),
+				title : "Sprouts", 
+				infoText : 'organic grocery store', 
+				venueId : "4aa54800f964a520d64720e3", 
+				keys : [ 'organic', 'grocery']
+
+			},  
+			{
+				latLng : new google.maps.LatLng(  33.50974700422365, -112.03650840118495),
+				title : "Half Price Books", 
+				infoText : 'half price books', 
+				venueId : "4bb55b70941ad13a1b2d1ee3", 
+				keys : [ 'books']
+
+			},  
+			{
+				latLng : new google.maps.LatLng( 33.510860989324634, -112.08319996026215),
+				title : "LA Fitness", 
+				infoText : 'LA Fitness', 
+				venueId : "50e2180de4b0a2f21aee7c05", 
+				keys : [ 'gym']
+
+			},  
+			{
+				latLng : new google.maps.LatLng( 33.524002292918325, -112.04780876720213),
+				title : "Luci's Healthy Marketplace", 
+				infoText : 'Healthy Marketplace', 
+				venueId : "4acb5a15f964a52089c320e3", 
+				keys : [ 'grocery', 'food']
+
+			}			
+
+			
 		]
      
   
@@ -80,9 +122,9 @@
       		// take the bubbe text and the title and split them into words and add them to the list of keys
       		// so that the search will include that text as well
       		var bubbleParts = self.bubbleText().split( " ");
-      		for( var i = 0 ; i < bubbleParts.length; i++ ) self.keys.push( bubbleParts[i] );
+      		for( var i = 0 ; i < bubbleParts.length; i++ ) self.keys.push( bubbleParts[i].toLowerCase() );
       		var titleParts = self.title.split( " " );
-      		for( var i = 0; i < titleParts.length; i++ ) self.keys.push( titleParts[i]);
+      		for( var i = 0; i < titleParts.length; i++ ) self.keys.push( titleParts[i].toLowerCase());
       		
 
       		self.infowindow = new google.maps.InfoWindow( { content : self.bubbleText() })
@@ -121,7 +163,7 @@
 
       		self.matches = function( q ){
       			// see if query 'q' appears in the keys
-      			return $.inArray( q, self.keys ) != -1
+      			return $.inArray( q.toLowerCase(), self.keys ) != -1
       		}
 
 
@@ -231,7 +273,8 @@
 				<td>
 						<input data-bind="value: searchQ" />
 						<button data-bind="click: searchMarkers">Search</button>												
-						<button data-bind="click: clearSearch">Clear</button>						
+						<button data-bind="click: clearSearch">Clear</button>		
+						<span> (e.g. food, coffee, books, etc. ) </span>				
 				</td>
 			</tr>
 		</table>	
