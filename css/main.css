@@ -19,3 +19,12 @@ html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
 	background-color:  grey;
 }
 
+
+
+@media only screen 
+and (max-width : 480px) {
+	#list-view {
+		display: none;
+	}
+	
+}
