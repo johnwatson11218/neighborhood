@@ -1,0 +1,12 @@
+
+This is my submission for project 5. 
+
+To run this project just open the index.html file.
+
+You should then see a map of Phoenix, AZ with 10 markers placed at locations around the city. 
+
+If you click on either a marker or a list item then an info bubble should appear telling you a little info as well as an asynchronous call to foursquare.com to get the star rating and full name of the venue. 
+
+You can search by entering terms in the search box and clicking "search". The markers have a few tags added e.g. food, coffee, etc. In addition the search should look through the title and info bubble text. There is no boolean logic implemented with this search. 
+
+If the screen is too small then the list view is hidden using a media query and some css. 
