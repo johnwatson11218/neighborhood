@@ -2,6 +2,8 @@
 
 <head>
 	<title>Project 5</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type='text/javascript' src='js/knockout-3.3.0.js'></script>
 	<script type='text/javascript' src='js/jquery-2.1.3.min.js'></script>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
@@ -12,8 +14,17 @@
 
       $( document ).ready(  function(){
 
-      	var map = new google.maps.Map(document.getElementById('map-canvas'), {center: new google.maps.LatLng(33.486305, -112.049339),zoom: 12 });
+		var map;
+      	if( typeof google != "undefined" ){
+      		map = new google.maps.Map(document.getElementById('map-canvas'), {center: new google.maps.LatLng(33.486305, -112.049339),zoom: 12 });	
+      	}
+      	 
       
+      	if( typeof map == 'undefined' ){
+      		$('#error-msg').css( 'display', 'block');
+      		$('#map-canvas').css( 'display', 'none');
+      		return;
+      	}
       	
 		var markerInfo = [
 			{   
@@ -284,7 +295,6 @@
 	<div id="list-view">
 		<table>
 			<tbody data-bind="foreach: markers()">
-				<!-- <div data-bind="css: { profitWarning: currentProfit() < 0 }"> -->
 				<tr data-bind="click: $root.selectItem"><td data-bind="text: title, css : { selected : isSelected() }"></td></tr>
 			</tbody>
 		</table>
@@ -294,6 +304,6 @@
 		FourSquare.com says ... <strong data-bind="text: fourName"></strong> is rated at <strong data-bind="text: fourRating"></strong></strong>
 	</div>
 
-
+	<div id="error-msg" style="display : none; color : red">The google map could not be loaded</div>
 </body>
 </html>
