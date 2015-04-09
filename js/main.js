@@ -26,7 +26,7 @@
 			{
 				latLng : new google.maps.LatLng(33.5105393352139 , -112.028618823315 	),
 				title : "Apple Store",
-				infoText : 'The Apple Store sells macs and mac stuff',
+				infoText : 'The Apple Store sells macs and mac stuff<br>second line ...',
 				venueId : "4a3d9447f964a52077a21fe3",
 				keys : [ 'computer', 'apple', 'biltmore']
 			},
