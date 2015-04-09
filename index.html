@@ -14,9 +14,19 @@
 
       $( document ).ready(  function(){
 
+      	$('#list-view-open').click( function(){       			
+      			var listView = $('#list-view');
+      			if( listView.css( 'display')  === 'none'){
+      				listView.css( 'display', 'block');
+      			} else { 
+					listView.css( 'display', 'none');
+      			}
+
+      		});
+
 		var map;
       	if( typeof google != "undefined" ){
-      		map = new google.maps.Map(document.getElementById('map-canvas'), {center: new google.maps.LatLng(33.486305, -112.049339),zoom: 12 });	
+      		map = new google.maps.Map(document.getElementById('map-canvas'), {center: new google.maps.LatLng(33.5, -112.11),zoom: 12 });	
       	}
       	 
       
@@ -291,7 +301,11 @@
 				</td>
 			</tr>
 		</table>	
+	<div id="four-square-view">
+		FourSquare.com says ... <strong data-bind="text: fourName"></strong> is rated at <strong data-bind="text: fourRating"></strong></strong>
+	</div>
 
+	<div id="list-view-open">(+) Toggle List View</div>
 	<div id="map-canvas"></div>
 
 	<div id="list-view">
@@ -302,9 +316,8 @@
 		</table>
 	</div>
 
-	<div id="four-square-view">
-		FourSquare.com says ... <strong data-bind="text: fourName"></strong> is rated at <strong data-bind="text: fourRating"></strong></strong>
-	</div>
+	
+
 
 	<div id="error-msg" style="display : none; color : red">The google map could not be loaded</div>
 </body>
