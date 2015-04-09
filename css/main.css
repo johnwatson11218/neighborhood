@@ -19,10 +19,14 @@ html, body{
 	display : none;
 }
 
-.selected {
-	background-color:  grey;
+.hidden {
+	/*background-color:  grey;*/
+	display : none;
 }
 
+.list-item:hover { 
+	background-color:  yellow;
+}
 
 
 @media only screen 

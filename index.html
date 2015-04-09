@@ -188,30 +188,30 @@
       		*/
 
       		// this var is used to control the css class for the list item
-      		self.isSelected = ko.observable( false );
+      		self.isHidden = ko.observable( false );
 
       		self.initialState = function(){
-      			self.isSelected( false );
+      			self.isHidden( false );
       			self.mapMarker.setVisible( true );
       			self.infowindow.close();
       			$('#four-square-view').css( 'display', 'none');	
       		};
 
       		self.clicked = function(){
-      			self.isSelected( true );
+      			self.isHidden( false );
       			self.mapMarker.setVisible( true );
       			self.infowindow.open( map,self.mapMarker );
       		};
 
       		self.matchesSearch = function(){
-      			self.isSelected( true );
+      			self.isHidden( false );
       			self.mapMarker.setVisible( true );
       			self.infowindow.open( map,self.mapMarker );
       			$('#four-square-view').css( 'display', 'none');	
       		};
 
       		self.doesNotMatch = function(){ 
-      			self.isSelected( false );
+      			self.isHidden( true );
       			self.mapMarker.setVisible( false );
       			self.infowindow.close();
       			$('#four-square-view').css( 'display', 'none');	
@@ -282,10 +282,12 @@
 			</tr>
 			<tr>
 				<td>
+					<form action="">
 						<input data-bind="value: searchQ" />
 						<button data-bind="click: searchMarkers">Search</button>												
 						<button data-bind="click: clearSearch">Clear</button>		
 						<span> (e.g. food, coffee, books, etc. ) </span>				
+					</form>
 				</td>
 			</tr>
 		</table>	
@@ -295,7 +297,7 @@
 	<div id="list-view">
 		<table>
 			<tbody data-bind="foreach: markers()">
-				<tr data-bind="click: $root.selectItem"><td data-bind="text: title, css : { selected : isSelected() }"></td></tr>
+				<tr data-bind="click: $root.selectItem"><td data-bind="text: title, css : { hidden : isHidden() }" class='list-item'></td></tr>
 			</tbody>
 		</table>
 	</div>
