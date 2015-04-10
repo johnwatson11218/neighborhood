@@ -26,14 +26,14 @@
 			{
 				latLng : new google.maps.LatLng(33.5105393352139 , -112.028618823315 	),
 				title : "Apple Store",
-				infoText : 'The Apple Store sells macs and mac stuff<br>second line ...',
+				infoText : 'The Apple Store<br>2502 E Camelback Rd<br>(602) 606-1470',
 				venueId : "4a3d9447f964a52077a21fe3",
 				keys : [ 'computer', 'apple', 'biltmore']
 			},
 			{
 				latLng : new google.maps.LatLng(33.57084159984521, -112.06561795215607),
 				title : "Los Reyes de la Torta",
-				infoText : 'Mexico City style sandwich shop',
+				infoText : 'Mexico City style sandwich shop<br>9230 N 7th St<br>(602) 870-2967',
 				venueId : "4b61dfacf964a52069282ae3",
 				keys : [ 'mexican', 'food']
 			},
@@ -41,7 +41,7 @@
 
 				latLng : new google.maps.LatLng( 33.47016494688462,  -112.06533268014412 ),
 				title : "Green Restaurant",
-				infoText : 'Vegan Food.',
+				infoText : 'Vegan Food.<br> 2022 N 7th St<br>(602) 258-1870',
 				venueId : "4e8a0dc45c5c370ff4894f15",
 				keys : [ 'vegan', 'food']
 			},
@@ -49,7 +49,7 @@
 
 				latLng : new google.maps.LatLng( 33.49749976025891, -112.08386364950333 ),
 				title : "Copper Star Coffee",
-				infoText : 'local coffee shop',
+				infoText : 'local coffee shop<br>4220 N 7th Ave<br>(602) 266-2136',
 				venueId : "4a57f364f964a52021b71fe3",
 				keys : [ 'coffee']
 			},
@@ -57,14 +57,14 @@
 
 				latLng : new google.maps.LatLng(  33.581339203011716,  -112.1181889383759),
 				title : "Olive Garden",
-				infoText : 'National Chain Restaurant',
+				infoText : 'National Chain Restaurant<br>2710 W North Ln<br>(602) 943-1502',
 				venueId : "4b4e8298f964a5200ff026e3",
 				keys : [ 'italian', 'food']
 			},
 			{
 				latLng : new google.maps.LatLng( 33.5004692924433, -112.07405313849449),
 				title : "Lux Coffee",
-				infoText : 'local coffee shop',
+				infoText : 'local coffee shop<br>4402 N Central Ave<br>(602) 327-1396',
 				venueId : "414b7a80f964a520d01c1fe3",
 				keys : [ 'coffee']
 
@@ -72,7 +72,7 @@
 			{
 				latLng : new google.maps.LatLng( 33.5545746784533, -112.10102140903473),
 				title : "Sprouts",
-				infoText : 'organic grocery store',
+				infoText : 'organic grocery store<br>8040 N 19th Ave<br>(602) 864-6130',
 				venueId : "4aa54800f964a520d64720e3",
 				keys : [ 'organic', 'grocery']
 
@@ -80,7 +80,7 @@
 			{
 				latLng : new google.maps.LatLng(  33.50974700422365, -112.03650840118495),
 				title : "Half Price Books",
-				infoText : 'half price books',
+				infoText : 'half price books<br>2102 E Camelback Rd<br>(602) 954-4653',
 				venueId : "4bb55b70941ad13a1b2d1ee3",
 				keys : [ 'books']
 
@@ -88,7 +88,7 @@
 			{
 				latLng : new google.maps.LatLng( 33.510860989324634, -112.08319996026215),
 				title : "LA Fitness",
-				infoText : 'LA Fitness',
+				infoText : 'LA Fitness<br>710 W Camelback Rd<br>(602) 282-0243',
 				venueId : "50e2180de4b0a2f21aee7c05",
 				keys : [ 'gym']
 
@@ -96,7 +96,7 @@
 			{
 				latLng : new google.maps.LatLng( 33.524002292918325, -112.04780876720213),
 				title : "Luci's Healthy Marketplace",
-				infoText : 'Healthy Marketplace',
+				infoText : 'Healthy Marketplace<br> 1590 Bethany Home Rd<br>(602) 773-1339',
 				venueId : "4acb5a15f964a52089c320e3",
 				keys : [ 'grocery', 'food']
 
